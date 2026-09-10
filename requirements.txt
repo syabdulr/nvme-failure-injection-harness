@@ -1,0 +1,4 @@
+# Project 1 provides the log-page capture / diff / threshold-rule logic.
+# For local dev with both repos checked out side by side, prefer:
+#   pip install -e ../nvme-logpage-explorer
+nvme-logpage-explorer @ git+https://github.com/syabdulr/nvme-logpage-explorer.git
