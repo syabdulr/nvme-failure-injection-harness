@@ -1,0 +1,67 @@
+{
+  "scenario": "oob_write",
+  "description": "Issue a write whose starting LBA is past the namespace size. A conforming controller rejects it with Generic / LBA Out of Range.",
+  "captured_utc": "2026-09-10T19:46:33+00:00",
+  "device": {
+    "controller": "/dev/nvme0",
+    "namespace": "/dev/nvme0n1",
+    "model": "QEMU NVMe Ctrl",
+    "serial": "OCP00000000DEADBEEF",
+    "firmware": "10.2.1"
+  },
+  "injection": {
+    "scenario": "oob_write",
+    "commands": [
+      "nvme write /dev/nvme0n1 --start-block 1099511627776 --block-count 0 --data-size 4096 --data /dev/zero"
+    ],
+    "returncode": 1,
+    "status": {
+      "raw": "0x4080",
+      "sct": 0,
+      "sct_name": "Generic Command Status",
+      "sc": "0x80",
+      "sc_name": "LBA Out of Range",
+      "dnr": true,
+      "more": false,
+      "phase_tag": false,
+      "root_cause_hint": "LBA range starts or extends past the namespace size",
+      "source": "cqe"
+    },
+    "stderr": "NVMe status: LBA Out of Range: The command references an LBA that exceeds the size of the namespace(0x4080)",
+    "dmesg": [],
+    "notes": "start LBA 1099511627776 is far beyond nsze; the transfer never reaches the backing store."
+  },
+  "expectation": {
+    "expected_sct": 0,
+    "expected_sc": 128,
+    "met": true
+  },
+  "completion_status": {
+    "raw": "0x4080",
+    "sct": 0,
+    "sct_name": "Generic Command Status",
+    "sc": "0x80",
+    "sc_name": "LBA Out of Range",
+    "dnr": true,
+    "more": false,
+    "phase_tag": false,
+    "root_cause_hint": "LBA range starts or extends past the namespace size",
+    "source": "cqe"
+  },
+  "error_log_0x01": {
+    "new_entries": [],
+    "note": "QEMU 10.2 does not populate log page 0x01 \u2014 see docs/injection-method.md"
+  },
+  "snapshot_diff": [],
+  "threshold_findings": {
+    "new": [],
+    "after_all": [
+      {
+        "severity": "INFO",
+        "rule": "available_spare",
+        "message": "available spare and threshold both 0 \u2014 device does not report spare",
+        "observed": 0
+      }
+    ]
+  }
+}

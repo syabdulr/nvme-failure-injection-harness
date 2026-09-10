@@ -1,0 +1,87 @@
+{
+  "scenario": "compare_mismatch",
+  "description": "Write pattern A to an LBA, then NVMe Compare it against pattern B. Expected: Media and Data Integrity / Compare Failure.",
+  "captured_utc": "2026-09-10T19:46:34+00:00",
+  "device": {
+    "controller": "/dev/nvme0",
+    "namespace": "/dev/nvme0n1",
+    "model": "QEMU NVMe Ctrl",
+    "serial": "OCP00000000DEADBEEF",
+    "firmware": "10.2.1"
+  },
+  "injection": {
+    "scenario": "compare_mismatch",
+    "commands": [
+      "nvme write /dev/nvme0n1 --start-block 10 --block-count 0 --data-size 4096 --data /tmp/tmp4fupqqg2/a  (rc=0)",
+      "nvme compare /dev/nvme0n1 --start-block 10 --block-count 0 --data-size 4096 --data /tmp/tmp4fupqqg2/b"
+    ],
+    "returncode": 1,
+    "status": {
+      "raw": "0x4285",
+      "sct": 2,
+      "sct_name": "Media and Data Integrity Errors",
+      "sc": "0x85",
+      "sc_name": "Compare Failure",
+      "dnr": true,
+      "more": false,
+      "phase_tag": false,
+      "root_cause_hint": "Compare command miscompare \u2014 media contents differ from the expected buffer",
+      "source": "cqe"
+    },
+    "stderr": "NVMe status: Compare Failure: The command failed due to a miscompare during a Compare command(0x4285)",
+    "dmesg": [],
+    "notes": "the write lands cleanly; only the Compare against the wrong expected data fails, which is how a drive signals a miscompare."
+  },
+  "expectation": {
+    "expected_sct": 2,
+    "expected_sc": 133,
+    "met": true
+  },
+  "completion_status": {
+    "raw": "0x4285",
+    "sct": 2,
+    "sct_name": "Media and Data Integrity Errors",
+    "sc": "0x85",
+    "sc_name": "Compare Failure",
+    "dnr": true,
+    "more": false,
+    "phase_tag": false,
+    "root_cause_hint": "Compare command miscompare \u2014 media contents differ from the expected buffer",
+    "source": "cqe"
+  },
+  "error_log_0x01": {
+    "new_entries": [],
+    "note": "QEMU 10.2 does not populate log page 0x01 \u2014 see docs/injection-method.md"
+  },
+  "snapshot_diff": [
+    {
+      "path": "ocp_smart_health_extended.Physical media units written.lo",
+      "before": 0,
+      "after": 4096,
+      "delta": 4096
+    },
+    {
+      "path": "smart_health.data_units_written",
+      "before": 0,
+      "after": 1,
+      "delta": 1
+    },
+    {
+      "path": "smart_health.host_write_commands",
+      "before": 0,
+      "after": 1,
+      "delta": 1
+    }
+  ],
+  "threshold_findings": {
+    "new": [],
+    "after_all": [
+      {
+        "severity": "INFO",
+        "rule": "available_spare",
+        "message": "available spare and threshold both 0 \u2014 device does not report spare",
+        "observed": 0
+      }
+    ]
+  }
+}

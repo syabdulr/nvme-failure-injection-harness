@@ -1,0 +1,70 @@
+{
+  "scenario": "media_error",
+  "description": "Read an LBA whose backing sector is wired to return EIO (via QEMU blkdebug). Expected: Media and Data Integrity / Unrecovered Read Error.",
+  "captured_utc": "2026-09-10T19:47:31+00:00",
+  "device": {
+    "controller": "/dev/nvme0",
+    "namespace": "/dev/nvme0n1",
+    "model": "QEMU NVMe Ctrl",
+    "serial": "OCP00000000DEADBEEF",
+    "firmware": "10.2.1"
+  },
+  "injection": {
+    "scenario": "media_error",
+    "commands": [
+      "nvme read /dev/nvme0n1 --start-block 256 --block-count 0 --data-size 4096 --data /dev/null"
+    ],
+    "returncode": 1,
+    "status": {
+      "raw": "0x0281",
+      "sct": 2,
+      "sct_name": "Media and Data Integrity Errors",
+      "sc": "0x81",
+      "sc_name": "Unrecovered Read Error",
+      "dnr": false,
+      "more": false,
+      "phase_tag": false,
+      "root_cause_hint": "unrecoverable read \u2014 ECC/XOR could not reconstruct the block",
+      "source": "cqe"
+    },
+    "stderr": "NVMe status: Unrecovered Read Error: The read data could not be recovered from the media(0x281)",
+    "dmesg": [
+      "[   16.426872] nvme0n1: I/O Cmd(0x2) @ LBA 256, 1 blocks, I/O Error (sct 0x2 / sc 0x81)",
+      "[   16.434178] nvme0n1: I/O Cmd(0x2) @ LBA 256, 1 blocks, I/O Error (sct 0x2 / sc 0x81)"
+    ],
+    "notes": "LBA 256 (sector 2048) is wired to EIO in the blkdebug backend; other LBAs read fine."
+  },
+  "expectation": {
+    "expected_sct": 2,
+    "expected_sc": 129,
+    "met": true
+  },
+  "completion_status": {
+    "raw": "0x0281",
+    "sct": 2,
+    "sct_name": "Media and Data Integrity Errors",
+    "sc": "0x81",
+    "sc_name": "Unrecovered Read Error",
+    "dnr": false,
+    "more": false,
+    "phase_tag": false,
+    "root_cause_hint": "unrecoverable read \u2014 ECC/XOR could not reconstruct the block",
+    "source": "cqe"
+  },
+  "error_log_0x01": {
+    "new_entries": [],
+    "note": "QEMU 10.2 does not populate log page 0x01 \u2014 see docs/injection-method.md"
+  },
+  "snapshot_diff": [],
+  "threshold_findings": {
+    "new": [],
+    "after_all": [
+      {
+        "severity": "INFO",
+        "rule": "available_spare",
+        "message": "available spare and threshold both 0 \u2014 device does not report spare",
+        "observed": 0
+      }
+    ]
+  }
+}

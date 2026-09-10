@@ -1,0 +1,52 @@
+{
+  "scenario": "smart_warning",
+  "description": "Bring the device up with SMART Critical Warning bit 2 set. No command fails; the regression is only visible in the health log and must be caught there.",
+  "captured_utc": "2026-09-10T19:48:28+00:00",
+  "device": {
+    "controller": "/dev/nvme0",
+    "namespace": "/dev/nvme0n1",
+    "model": "QEMU NVMe Ctrl",
+    "serial": "OCP00000000DEADBEEF",
+    "firmware": "10.2.1"
+  },
+  "injection": {
+    "scenario": "smart_warning",
+    "commands": [
+      "(no failing command \u2014 SMART Critical Warning preset at boot)",
+      "nvme smart-log /dev/nvme0"
+    ],
+    "returncode": 0,
+    "status": null,
+    "stderr": "{\n  \"critical_warning\":4,\n  \"temperature\":323,\n  \"avail_spare\":0,\n  \"spare_thresh\":0,\n  \"percent_used\":0,\n  \"endurance_grp_critical_warning_summary\":0,\n  \"data_units_read\":2,\n  \"data_units_written\":0,\n  \"host_read_commands\":45,\n  \"host_write_commands\":0,\n  \"controller_busy_time\":0,\n  \"power_cycles\":0,\n  \"power_on_hours\":0,\n  \"unsafe_shutdowns\":0,\n  \"media_errors\":0,\n  \"num_err_log_entries\":0,\n  \"warning_temp_time\":0,\n  \"critical_comp_time\":0,\n  \"thm_temp1_trans_count\":0,\n  \"thm_temp2_trans_count\":0,\n  \"thm_temp1_total_time\":0,\n  \"thm_temp2_total_time\":0\n}",
+    "dmesg": [],
+    "notes": "Detection path is explore.evaluate() flagging critical_warning, not a completion-queue status."
+  },
+  "expectation": {
+    "expected_sct": null,
+    "expected_sc": null,
+    "met": true
+  },
+  "completion_status": null,
+  "error_log_0x01": {
+    "new_entries": [],
+    "note": "QEMU 10.2 does not populate log page 0x01 \u2014 see docs/injection-method.md"
+  },
+  "snapshot_diff": [],
+  "threshold_findings": {
+    "new": [],
+    "after_all": [
+      {
+        "severity": "CRITICAL",
+        "rule": "critical_warning",
+        "message": "NVM subsystem reliability degraded",
+        "observed": 4
+      },
+      {
+        "severity": "INFO",
+        "rule": "available_spare",
+        "message": "available spare and threshold both 0 \u2014 device does not report spare",
+        "observed": 0
+      }
+    ]
+  }
+}
