@@ -36,3 +36,10 @@ None new vs baseline, but `explore.evaluate()` flags on the post-injection snaps
 ## Snapshot diff
 
 - no log-page fields changed
+
+## See also
+
+- Full data: [`media_error.report.json`](media_error.report.json)
+- Mechanism used and the log-page-0x01 gap: [`docs/injection-method.md`](../docs/injection-method.md)
+- All scenarios summarised: [`docs/findings.md`](../docs/findings.md)
+- Regenerate with: [`README.md`](../README.md) → `env/run.sh`

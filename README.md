@@ -53,11 +53,11 @@ device and get their own boot. `env/run.sh` handles the grouping.
    regression test with pass/fail expectations per scenario (non-zero exit on a
    mismatch, for CI).
 
-## Emulation limits (see `docs/injection-method.md`)
+## Emulation limits (see [`docs/injection-method.md`](docs/injection-method.md))
 
 QEMU 10.2's NVMe model **does not populate the Error Information Log (0x01)** or
 the SMART `media_errors` / `num_err_log_entries` counters, even for genuine I/O
-failures. Verified three ways in `docs/findings.md`. The harness therefore keys
+failures. Verified three ways in [`docs/findings.md`](docs/findings.md). The harness therefore keys
 detection on the **completion-queue status** (always present and spec-accurate)
 and the kernel log, while `errorlog.py` keeps a full, unit-tested 0x01 decoder
 for real hardware.
@@ -73,5 +73,9 @@ docs/injection-method.md   which mechanism, and why the 0x01 gap
 docs/findings.md      recorded per-scenario results
 tests/test_errorlog.py     status-decode + interpretation tests (no device)
 ```
+
+Curated per-scenario reports (committed so they're readable without standing up
+the VM) live in [`samples/`](samples/README.md); regenerated runs land in
+`output/` per the loop above.
 
 `make test` runs the unit tests. MIT licensed.

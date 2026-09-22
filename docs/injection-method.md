@@ -1,5 +1,8 @@
 # Injection method — what's used and why
 
+See the [top-level README](../README.md) for the loop this feeds and
+[`docs/findings.md`](findings.md) for the recorded per-scenario output.
+
 ## What QEMU 10.2's `nvme` device offers
 
 `qemu-system-x86_64 -device nvme,help` on the pinned build (10.2.1) — the
@@ -67,7 +70,7 @@ and detection is entirely `explore.evaluate()`'s job.
 increment the SMART `media_errors` / `num_err_log_entries` counters** — not for
 client-side command rejections, and not for genuine blkdebug I/O failures.
 
-Verified three ways (see `docs/findings.md` for the raw output):
+Verified three ways (see [`docs/findings.md`](findings.md) for the raw output):
 
 1. `oob_write` / `invalid_opcode` — command rejected with a correct CQE status;
    `nvme error-log` afterwards is still all-zero, `num_err_log_entries = 0`.

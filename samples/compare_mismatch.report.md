@@ -38,3 +38,10 @@ None new vs baseline, but `explore.evaluate()` flags on the post-injection snaps
 | `ocp_smart_health_extended.Physical media units written.lo` | 0 | 4096 | +4096 |
 | `smart_health.data_units_written` | 0 | 1 | +1 |
 | `smart_health.host_write_commands` | 0 | 1 | +1 |
+
+## See also
+
+- Full data: [`compare_mismatch.report.json`](compare_mismatch.report.json)
+- Mechanism used and the log-page-0x01 gap: [`docs/injection-method.md`](../docs/injection-method.md)
+- All scenarios summarised: [`docs/findings.md`](../docs/findings.md)
+- Regenerate with: [`README.md`](../README.md) → `env/run.sh`

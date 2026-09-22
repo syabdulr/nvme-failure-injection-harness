@@ -3,7 +3,9 @@
 Recorded from `./env/run.sh` against the emulated device (QEMU 10.2.1,
 nvme-cli 2.16, NVMe 1.4.0 controller from Project 1's `env/`, booted with
 virtme-ng). Per-scenario reports are regenerated into `output/`; curated copies
-are in `samples/`.
+are in [`samples/`](../samples/README.md) — see the [top-level README](../README.md)
+for how to run it and [`injection-method.md`](injection-method.md) for why each
+scenario is shaped the way it is.
 
 **All five scenarios meet their expected NVMe status (`env/run.sh` exits 0).**
 
@@ -16,6 +18,12 @@ are in `samples/`.
 | `compare_mismatch` | write A, Compare B | `0x4285` Compare Failure | **2** / 0x85 | yes | none | — |
 | `media_error` | blkdebug EIO on sector 2048 | `0x0281` Unrecovered Read Error | **2** / 0x81 | no | none | **yes** |
 | `smart_warning` | `smart_critical_warning=0x04` at boot | *(no command fails)* | — | — | none | — |
+
+Full per-scenario write-ups: [`oob_write`](../samples/oob_write.report.md) ·
+[`invalid_opcode`](../samples/invalid_opcode.report.md) ·
+[`compare_mismatch`](../samples/compare_mismatch.report.md) ·
+[`media_error`](../samples/media_error.report.md) ·
+[`smart_warning`](../samples/smart_warning.report.md).
 
 ## Per scenario
 

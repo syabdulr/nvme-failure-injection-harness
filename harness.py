@@ -170,6 +170,14 @@ def _write_reports(name: str, report: dict, injection) -> None:
     else:
         lines.append("- no log-page fields changed")
 
+    lines += [
+        "", "## See also", "",
+        f"- Full data: [`{name}.report.json`]({name}.report.json)",
+        "- Mechanism used and the log-page-0x01 gap: [`docs/injection-method.md`](../docs/injection-method.md)",
+        "- All scenarios summarised: [`docs/findings.md`](../docs/findings.md)",
+        f"- Curated copy of this run: [`samples/{name}.report.md`](../samples/{name}.report.md)",
+    ]
+
     (OUT / f"{name}.report.md").write_text("\n".join(lines) + "\n")
 
 
